@@ -1,0 +1,25 @@
+--- __init__.py.orig	2022-11-16 18:06:06.000000000 +0000
++++ __init__.py		2022-11-17 03:07:08.766672151 +0000
+@@ -49,6 +49,6 @@
+         ],
+         'port': 5901,
+         'timeout': 30,
+-        'mappath': {'/': '/vnc_lite.html'},
++        'mappath': {'/': '/vnc.html'},
+         'new_browser_window': True
+     }
+
+--- share/web/noVNC-1.2.0/app/ui.js.orig	2022-11-17 02:56:04.221013969 +0000
++++ share/web/noVNC-1.2.0/app/ui.js		2022-11-17 02:58:29.777378716 +0000
+@@ -166,7 +166,10 @@
+         UI.initSetting('shared', true);
+         UI.initSetting('view_only', false);
+         UI.initSetting('show_dot', false);
+-        UI.initSetting('path', 'websockify');
++
++	// Modified from original!
++        UI.initSetting('path', window.location.pathname.replace(/[^/]*$/, '').substring(1) + 'websockify');
++
+         UI.initSetting('repeaterID', '');
+         UI.initSetting('reconnect', false);
+         UI.initSetting('reconnect_delay', 5000);

@@ -1,0 +1,18 @@
+--- /usr/share/applications/code.desktop	2022-11-09 03:53:45.000000000 +0000
++++ /usr/share/applications/code.desktop 	2022-11-17 04:58:12.367650686 +0000
+@@ -2,7 +2,7 @@
+ Name=Visual Studio Code
+ Comment=Code Editing. Redefined.
+ GenericName=Text Editor
+-Exec=/usr/share/code/code --unity-launch %F
++Exec=/usr/share/code/code --no-sandbox --unity-launch %F 
+ Icon=com.visualstudio.code
+ Type=Application
+ StartupNotify=false
+@@ -14,5 +14,5 @@
+ 
+ [Desktop Action new-empty-window]
+ Name=New Empty Window
+-Exec=/usr/share/code/code --new-window %F
++Exec=/usr/share/code/code --no-sandbox --new-window %F
+ Icon=com.visualstudio.code
