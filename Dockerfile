@@ -1,5 +1,5 @@
 
-FROM ucsdets/datahub-base-notebook:2022.3-stable as datahub-base-notebook
+FROM ucsdets/datahub-base-notebook:2023.1-stable as datahub-base-notebook
 
 USER root
 
@@ -32,7 +32,7 @@ ARG JRD_COMMIT=7d9b2810669e22b5ecdcfee8d8f531c3da0ab8a9
 RUN ID=`mktemp -d` && cd $ID \
 	&& curl -L https://github.com/jupyterhub/jupyter-remote-desktop-proxy/tarball/${JRD_COMMIT} | tar xvzf - && \
 	cd jupyterhub-jupyter-remote-desktop-proxy-$(echo $JRD_COMMIT | cut -c 1-7) && \
-	conda env update -n base --file environment.yml && \
+	mamba env update -n base --file environment.yml && \
 	rm -rf ${ID}
 
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y update \
@@ -40,9 +40,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y update \
    		build-essential
 
 # Patch for https://github.com/novnc/websockify/pull/542
-COPY ./websocketproxy.patch ./jupyter_desktop.patch /tmp
-RUN     (cd /opt/conda/lib/python3.9/site-packages/websockify; patch -p0 < /tmp/websocketproxy.patch)  && \
-	(cd /opt/conda/lib/python3.9/site-packages/jupyter_desktop; patch -p0 < /tmp/jupyter_desktop.patch ) && \
+COPY ./websocketproxy.patch ./jupyter_desktop.patch /tmp/
+RUN     (cd /opt/conda/lib/python3.9/site-packages/websockify; patch -p0 < /tmp/websocketproxy.patch --batch)  && \
+	(cd /opt/conda/lib/python3.9/site-packages/jupyter_desktop; patch -p0 < /tmp/jupyter_desktop.patch --batch) && \
 	rm /tmp/websocketproxy.patch /tmp/jupyter_desktop.patch
 
 # Install VSCode
@@ -60,6 +60,13 @@ RUN mkdir -p -m 0755 /etc/datahub-profile.d && \
 COPY ./vscode-desktop.patch /tmp
 RUN     (cd /; patch -p0 < /tmp/vscode-desktop.patch ) && \
 	rm /tmp/vscode-desktop.patch
+
+# Install IntelliJ
+RUN  curl -L -s -o /tmp/intellij.tar.gz 'https://download.jetbrains.com/idea/ideaIC-2022.3.1.tar.gz' 
+RUN    mkdir -p /opt/idea && \
+	tar -xzf  /tmp/intellij.tar.gz -C /opt/idea --strip-components 1 && \
+    ln -s /opt/idea/bin/idea.sh /usr/local/bin/idea && \
+ 	rm /tmp/intellij.tar.gz 
 
 USER jovyan
 
