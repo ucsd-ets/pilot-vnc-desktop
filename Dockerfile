@@ -61,5 +61,12 @@ COPY ./vscode-desktop.patch /tmp
 RUN     (cd /; patch -p0 < /tmp/vscode-desktop.patch ) && \
 	rm /tmp/vscode-desktop.patch
 
+# Install IntelliJ
+RUN  curl -L -s -o /tmp/intellij.tar.gz 'https://download.jetbrains.com/idea/ideaIC-2022.3.1.tar.gz' 
+RUN    mkdir -p /opt/idea && \
+	tar -xzf  /tmp/intellij.tar.gz -C /opt/idea --strip-components 1 && \
+    ln -s /opt/idea/bin/idea.sh /usr/local/bin/idea && \
+ 	rm /tmp/intellij.tar.gz 
+
 USER jovyan
 
