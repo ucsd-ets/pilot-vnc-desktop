@@ -68,5 +68,7 @@ RUN    mkdir -p /opt/idea && \
     ln -s /opt/idea/bin/idea.sh /usr/local/bin/idea && \
  	rm /tmp/intellij.tar.gz 
 
+RUN apt-get install -y -q at-spi2-core
+
 USER jovyan
 
