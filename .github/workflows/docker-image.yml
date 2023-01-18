@@ -7,14 +7,14 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master", "*" ]
+    branches: [ "main", "*" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
     paths-ignore:
       - 'README.md'
       - '*.yaml'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
   
 env:
   REGISTRY: ghcr.io
