@@ -45,30 +45,7 @@ RUN     (cd /opt/conda/lib/python3.9/site-packages/websockify; patch -p0 < /tmp/
 	(cd /opt/conda/lib/python3.9/site-packages/jupyter_desktop; patch -p0 < /tmp/jupyter_desktop.patch --batch) && \
 	rm /tmp/websocketproxy.patch /tmp/jupyter_desktop.patch
 
-# Install VSCode
-RUN  curl -L -s -o /tmp/vsc.deb 'https://go.microsoft.com/fwlink/?LinkID=760868' && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -y /tmp/vsc.deb && \
- 	rm /tmp/vsc.deb 
-
-# VScode disables LD_PRELOAD, so copy wrapped passwd/group onto /etc versions
-RUN chmod 0666 /etc/passwd /etc/group
-RUN mkdir -p -m 0755 /etc/datahub-profile.d && \
-        echo "( cp /tmp/passwd.wrap /etc/passwd && cp /tmp/group.wrap /etc/group ) 2>/dev/null" \
-		> /etc/datahub-profile.d/vscode-etc-passwd.sh
-
-# Update desktop launcher to run VScode "--no-sandbox" (user namespaces not available in our containers)
-COPY ./vscode-desktop.patch /tmp
-RUN     (cd /; patch -p0 < /tmp/vscode-desktop.patch ) && \
-	rm /tmp/vscode-desktop.patch
-
-# Install IntelliJ
-RUN  curl -L -s -o /tmp/intellij.tar.gz 'https://download.jetbrains.com/idea/ideaIC-2022.3.1.tar.gz' 
-RUN    mkdir -p /opt/idea && \
-	tar -xzf  /tmp/intellij.tar.gz -C /opt/idea --strip-components 1 && \
-    ln -s /opt/idea/bin/idea.sh /usr/local/bin/idea && \
- 	rm /tmp/intellij.tar.gz 
-
-RUN apt-get install -y -q at-spi2-core
+# Additional applications, etc. can go here
 
 USER jovyan
 
