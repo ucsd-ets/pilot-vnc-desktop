@@ -39,12 +39,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y update \
  	&& apt-get install -y --no-install-recommends \
    		build-essential
 
-# Patch for https://github.com/novnc/websockify/pull/542
-#COPY ./websocketproxy.patch ./jupyter_desktop.patch /tmp/
-#RUN     (cd /opt/conda/lib/python3.9/site-packages/websockify; patch -p0 < /tmp/websocketproxy.patch --batch)  && \
-#	(cd /opt/conda/lib/python3.9/site-packages/jupyter_desktop; patch -p0 < /tmp/jupyter_desktop.patch --batch) && \
-#	rm /tmp/websocketproxy.patch /tmp/jupyter_desktop.patch
-
 # Additional applications, etc. can go here
 
 USER jovyan
